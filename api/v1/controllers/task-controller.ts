@@ -1,4 +1,4 @@
-import {Request, Response} from 'express';
+import e, {Request, Response} from 'express';
 import Task from "../models/task.model";
 import paginationHelper from '../../../helpers/pagination';
 import searchHelper from '../../../helpers/search';
@@ -80,4 +80,37 @@ try {
       message: "Cập nhật trạng thái thất bại"
   })
 }
+}
+
+export const changeMulti = async (req: Request, res: Response) => {
+  try {
+    const ids: string[] = req.body.ids;
+    const key: string = req.body.key;
+    const value: string = req.body.value;
+
+    switch (key) {
+      case "status":
+        await Task.updateMany({
+          _id: {
+            $in: ids
+          }
+        }, {
+          status: value
+        })
+        break;
+    
+      default:
+        break;
+    }
+
+    res.json({
+      code: 200,
+      message: "Cập nhật thành công"
+    })
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Cập nhật thất bại"
+    })
+  }
 }
