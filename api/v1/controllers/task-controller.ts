@@ -114,3 +114,41 @@ export const changeMulti = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const create = async (req: Request, res: Response) => {
+  try {
+    const product = new Task(req.body);
+    const data = await product.save();
+
+    res.json({
+      code: 200,
+      message: "Tạo mới thành công",
+      data: data
+    })
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Tạo mới thất bại"
+    })
+  }
+}
+
+export const edit = async (req: Request, res: Response) => {
+  try {
+    const id: string | string[] = req.params.id;
+
+    await Task.updateOne({
+      _id: id
+    }, req.body
+  );
+    res.json({
+      code: 200,
+      message: "Cập nhật thành công"
+    })
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Cập nhật thất bại"
+    })
+  }
+}
