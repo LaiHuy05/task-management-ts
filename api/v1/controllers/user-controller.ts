@@ -30,3 +30,36 @@ export const register = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const login = async (req: Request, res: Response) => {
+  const email: string = req.body.email;
+  const password: string = md5(req.body.password);
+
+  const user = await User.findOne({
+    email: email,
+    deleted: false,
+  })
+
+  if(!user) {
+    res.json({
+      code: 400,
+      message: "email không tồn tại",
+    })
+    return
+  }
+  if(password !== user.password) {
+    res.json({
+      code: 400,
+      message: "Mật khẩu không đúng",
+    })
+    return
+  }
+
+  const token = user.token;
+
+  res.json({
+    code: 200,
+    message: "Đăng nhập thành công",
+    token: token,
+  })
+}
