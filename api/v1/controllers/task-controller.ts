@@ -84,12 +84,17 @@ try {
 
 export const changeMulti = async (req: Request, res: Response) => {
   try {
+    enum keys {
+      STATUS = "status",
+      DELETE = "delete"
+    }
+
     const ids: string[] = req.body.ids;
     const key: string = req.body.key;
     const value: string = req.body.value;
 
     switch (key) {
-      case "status":
+      case keys.STATUS:
         await Task.updateMany({
           _id: {
             $in: ids
@@ -103,7 +108,7 @@ export const changeMulti = async (req: Request, res: Response) => {
         })
         break;
 
-      case "delete":
+      case keys.DELETE:
         await Task.updateMany({
           _id: {
             $in: ids
