@@ -97,16 +97,33 @@ export const changeMulti = async (req: Request, res: Response) => {
         }, {
           status: value
         })
+        res.json({
+          code: 200,
+          message: "Cập nhật thành công"
+        })
         break;
-    
+
+      case "delete":
+        await Task.updateMany({
+          _id: {
+            $in: ids
+          }
+        }, {
+          deleted: true,
+          deleteAt: new Date()
+        })
+        res.json({
+          code: 200,
+          message: "Xóa thành công"
+        })
+        break;
       default:
+        res.json({
+          code: 400,
+          message: "Cập nhật thất bại"
+        })
         break;
     }
-
-    res.json({
-      code: 200,
-      message: "Cập nhật thành công"
-    })
   } catch (error) {
     res.json({
       code: 400,
@@ -149,6 +166,27 @@ export const edit = async (req: Request, res: Response) => {
     res.json({
       code: 400,
       message: "Cập nhật thất bại"
+    })
+  }
+}
+
+export const deleteTask = async (req: Request, res: Response) => {
+  try {
+    const id: string | string[] = req.params.id;
+    await Task.updateOne({
+      _id: id
+    }, {
+      deleted: true,
+      deleteAt: new Date()
+    })
+    res.json({
+      code: 200,
+      message: "Xóa thành công"
+    })
+  } catch (error) {
+    res.json({
+      code: 400,
+      message: "Xóa thất bại"
     })
   }
 }
